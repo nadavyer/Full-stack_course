@@ -16,15 +16,16 @@ const Button = ({onClick, text}) => (
   <button onClick={onClick}> {text}</button>
 )
 
-const Content = ({good, neutral, bad, all, average, positive}) => {
+const Content = ({good, neutral, bad}) => {
   return (
     <div>
-      <p>good: {good}</p>
-      <p>neutral: {neutral}</p>
-      <p>bad: {bad}</p>
-      <p>all: {all}</p>
-      <p>average: {average}</p>
-      <p>positive: {positive}%</p>
+      <p>
+        good {good}<br />
+        neutral {neutral}<br/>
+        bad {bad}<br/>
+        average {(good - bad) / (good + neutral + bad)}<br/>
+        positive {good / (good + neutral + bad)} %<br/>
+      </p>
     </div>
   )
 }
@@ -39,30 +40,18 @@ const App = () => {
   const [good, setGood] = useState(0)
   const [neutral, setNeutral] = useState(0)
   const [bad, setBad] = useState(0)
-  const [all, setAll] = useState(0)
-  const [average, setAverage] = useState(0)
-  const [positive, setPositive] = useState(0)
-
-  const handleGeneralClick = () => {
-    setAll(all + 1)
-    console.log(good, neutral, bad, all, average, positive )
-    setAverage(((good - bad) / all))
-    setPositive(good / all)
-  }
+  
 
   const handleNeutralClick = () => {
     setNeutral(neutral + 1)
-    handleGeneralClick()
   }
 
   const handleBadClick = () => {
     setBad(bad + 1)
-    handleGeneralClick()
   }
 
   const handleGoodClick = () => {
     setGood(good + 1)
-    handleGeneralClick()
   }
 
   return (
@@ -72,7 +61,7 @@ const App = () => {
         <Button onClick={handleNeutralClick} text='neutral' />
         <Button onClick={handleBadClick} text='bad' />
         <Header text={header2} />
-        <Content good={good} neutral={neutral} bad={bad} all={all} average={average} positive={positive} />
+        <Content good={good} neutral={neutral} bad={bad} />
       </div>
   )
 }
