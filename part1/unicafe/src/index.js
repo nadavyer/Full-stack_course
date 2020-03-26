@@ -4,11 +4,11 @@ import ReactDOM from 'react-dom'
 
 const Header = ({text}) => {
   return(
-    <div>
+    <>
       <h1>
         {text}
       </h1>
-    </div>
+    </>
   )
 }
 
@@ -19,30 +19,36 @@ const Button = ({onClick, text}) => (
 
 const Statistic = ({text, value}) => {
   return (
-    <div>
-      {text} {value} <br/>
-    </div>
+    <tr>
+      <td>{text}</td>
+      <td> {value} </td>
+    </tr>
   )
 }
 
-const Statistics = (props) => {
-  if(props.good + props.bad + props.neutral === 0) {
+const Statistics = ({header, good, neutral, bad}) => {
+
+  let all = good + bad + neutral
+  let average = (good - bad) / (good + neutral + bad) 
+  let positive = ((good / (good + neutral + bad)) * 100) + ' %'
+  if(good + bad + neutral === 0) {
     return (
-      <div>
-        <Header text={props.header} />
+      <>
+        <Header text={header} />
         <p>No feedback given</p>
-      </div>
+      </>
     )
   }
   return (
-    <div>
-      <Header text={props.header} />
-      <Statistic text={"good"} value={props.good} />
-      <Statistic text={"neutral"} value={props.neutral} />
-      <Statistic text={"bad"} value={props.bad} />
-      <Statistic text={"average"} value={(props.good - props.bad) / (props.good + props.neutral + props.bad)} />
-      <Statistic text={"positive"} value={((props.good / (props.good + props.neutral + props.bad)) * 100) + ' %'} />
-    </div>
+    <>
+      <Header text={header} />
+      <Statistic text={"good "} value={good} />
+      <Statistic text={"neutral "} value={neutral} />
+      <Statistic text={"bad"} value={bad} />
+      <Statistic text={"all "} value={all} />
+      <Statistic text={"average "} value={average} />
+      <Statistic text={"positive "} value={positive} />
+    </>
   )
 }
 
@@ -70,13 +76,13 @@ const App = () => {
   }
 
   return (
-      <div>
+      <>
         <Header text={header1} />
         <Button onClick={handleGoodClick} text='good' />
         <Button onClick={handleNeutralClick} text='neutral' />
         <Button onClick={handleBadClick} text='bad' />
         <Statistics header={header2} good={good} bad={bad} neutral={neutral} />
-      </div>
+      </>
   )
 }
 
