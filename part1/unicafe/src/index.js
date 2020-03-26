@@ -26,7 +26,7 @@ const Statistic = ({text, value}) => {
   )
 }
 
-const Statistics = ({header, good, neutral, bad}) => {
+const Statistics = ({good, neutral, bad}) => {
 
   let all = good + bad + neutral
   let average = (good - bad) / (good + neutral + bad) 
@@ -34,21 +34,21 @@ const Statistics = ({header, good, neutral, bad}) => {
   if(good + bad + neutral === 0) {
     return (
       <>
-        <Header text={header} />
         <p>No feedback given</p>
       </>
     )
   }
   return (
-    <>
-      <Header text={header} />
-      <Statistic text={"good "} value={good} />
-      <Statistic text={"neutral "} value={neutral} />
-      <Statistic text={"bad"} value={bad} />
-      <Statistic text={"all "} value={all} />
-      <Statistic text={"average "} value={average} />
-      <Statistic text={"positive "} value={positive} />
-    </>
+    <table>    
+      <tbody>
+        <Statistic text={"good "} value={good} />
+        <Statistic text={"neutral "} value={neutral} />
+        <Statistic text={"bad"} value={bad} />
+        <Statistic text={"all "} value={all} />
+        <Statistic text={"average "} value={average} />
+        <Statistic text={"positive "} value={positive} />
+      </tbody>
+    </table>
   )
 }
 
@@ -81,7 +81,8 @@ const App = () => {
         <Button onClick={handleGoodClick} text='good' />
         <Button onClick={handleNeutralClick} text='neutral' />
         <Button onClick={handleBadClick} text='bad' />
-        <Statistics header={header2} good={good} bad={bad} neutral={neutral} />
+        <Header text={header2} />
+        <Statistics good={good} bad={bad} neutral={neutral} />
       </>
   )
 }
