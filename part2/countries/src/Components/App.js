@@ -23,15 +23,16 @@ const handleFilterChange = (event) => {
 }
 
 
-const filteredCountries =  newFilter === '' ? countries : countries.filter(countries =>
-   countries.name.toLowerCase().includes(newFilter.toLowerCase()))
+
+const filteredCountries =  newFilter === '' ? countries : countries.filter(country =>
+   country.name.toLowerCase().includes(newFilter.toLowerCase()))
 
 
 
   return (
     <div>
         <Filter value={newFilter} onChange={handleFilterChange} />
-        <Countries filteredCountries={filteredCountries} />
+        <Countries filteredCountries={filteredCountries} setNewFilter={setNewFilter} />
     </div>
   )
 }

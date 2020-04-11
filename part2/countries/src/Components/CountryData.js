@@ -1,7 +1,7 @@
 import React from 'react'
 
 
-const CountryExpanded = ({ country }) => {
+const CountryData = ({ country }) => {
     return(
         <div>
             <h1>{country.name}</h1>
@@ -17,4 +17,4 @@ const CountryExpanded = ({ country }) => {
     )
 }
 
-export default CountryExpanded
+export default CountryData
