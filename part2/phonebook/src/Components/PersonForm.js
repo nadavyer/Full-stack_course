@@ -1,18 +1,15 @@
 import React from 'react'
-import Button from './Button'
 
-const PersonForm =({ onSubmit, namevalue, onNameChange, numbervalue, onNumberChange }) => {
+const PersonForm =({ onSubmit, name, onNameChange, number, onNumberChange }) => {
 
   
     return(
       <form onSubmit={onSubmit}>
       <div>
-        <div>name: <input namevalue={namevalue} 
-        onChange={onNameChange} /></div>
-        <div>Number: <input numbervalue={numbervalue}
-        onChange={onNumberChange} /></div>
+        <div>name: <input name={name} onChange={onNameChange} /></div>
+        <div>Number: <input number={number} onChange={onNumberChange} /></div>
       </div>
-      <Button />
+      <button type="submit"> add</button>
     </form>
     )
 }

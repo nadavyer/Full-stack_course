@@ -22,9 +22,8 @@ const App = () => {
 
   useEffect(getAllPersons, [])
     
-  const updatePerson = ({ origPerson }) => {
-    
-    const updatedPerson = {...origPerson, number: number}
+  const updatePerson = (origPerson) => {
+    const updatedPerson = { ...origPerson, number: number }
     personsServices
     .update(updatedPerson.id, updatedPerson)
     .then(personToSet => 
@@ -54,12 +53,12 @@ const App = () => {
 
   const addPerson = (event) => {
     event.preventDefault()
-    if(persons.map(person => person.name).includes(name) && validateName() && validateNumber()) {
+    if(persons.map(person => person.name).includes(name) && validateName() && validateNumber()) { //update person
         if (window.confirm(`${name} is already added to phonebook, replace old number with a new one?`)) {
           const origPerson = persons.find(p => p.name === name)
           updatePerson(origPerson)
         }
-    }else {
+    }else {//add new person
       if (validateName() && validateNumber() ) {
         const personObj = {name, number}
           personsServices
@@ -69,7 +68,7 @@ const App = () => {
       }
     }
     setName('')
-    setNumber('')  
+    setNumber('')
   }
   
 
@@ -105,8 +104,8 @@ const App = () => {
       <h2>Phonebook</h2>
       <Filter value={filter} onChange={handleFilterChange} />
       <h2>Add a new</h2>
-      <PersonForm onSubmit={addPerson} nameValue={name} onNameChange={handleNameChange}
-      numberValue={number} onNumberChange={handleNumberChange} />
+      <PersonForm onSubmit={addPerson} name={name} onNameChange={handleNameChange}
+      number={number} onNumberChange={handleNumberChange} />
       <h2>Numbers</h2>
       <PersonsList filteredPersons={filteredPersons} handleDeleteBtn={handleDeleteBtn} />
         
