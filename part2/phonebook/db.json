@@ -2,33 +2,8 @@
   "persons": [
     {
       "name": "nadav",
-      "number": "0548150",
+      "number": "054",
       "id": 1
-    },
-    {
-      "name": "jp",
-      "number": "1",
-      "id": 2
-    },
-    {
-      "name": "dad",
-      "number": "654",
-      "id": 3
-    },
-    {
-      "name": "naam",
-      "number": "23123",
-      "id": 4
-    },
-    {
-      "name": "lo",
-      "number": "56",
-      "id": 5
-    },
-    {
-      "name": "gg",
-      "number": "55",
-      "id": 6
     }
   ]
 }
