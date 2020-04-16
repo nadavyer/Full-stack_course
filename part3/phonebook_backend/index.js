@@ -31,7 +31,7 @@ let persons = [
 
 
 app.get('/info', (req, res) => {
-  let numOfPeopleLine = `Phonebook has info for ${persons.length} people \n\nblaaaaa`
+  let numOfPeopleLine = `Phonebook has info for ${persons.length} people \n\n`
   console.log(utills.getCurrentTime())
   res.end(utills.getCurrentTime())
 })
