@@ -8,7 +8,7 @@ const getCurrentTime = () => {
         return dayName
     }
 
-    return getDay() + 
+    return getDay() //todo: stoped here
 }
 
  module.exports = {
