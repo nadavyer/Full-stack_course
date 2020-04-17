@@ -37,7 +37,7 @@ const validAddInput = (person) => {
 
 const nameInPhonebook = (name, persons) => {
     const person = persons.filter(p => p.name.toLowerCase() === name.toLowerCase())
-    return person
+    return person.length
 }
 
  module.exports = {

@@ -1,8 +1,21 @@
 const express = require('express')
+const morgan = require('morgan')
+const cors = require('cors')
 const utills = require('./utills')
-const app = express()
 
+const app = express()
 app.use(express.json())
+
+app.use(cors())
+morgan.token('person', (request, response) => {
+  return JSON.stringify(request.body)
+})
+
+//clog all POST 
+app.use(morgan(':method :url :status :res[content-length] - :response-time ms :person', {
+  skip: function (req, res) {return req.method !== 'POST'}
+}))
+
 
 let persons = [
     { 
@@ -45,7 +58,7 @@ app.get('/api/persons/:id', (req, res) => {
   person ? res.json(person) : res.status(404).end()
 })
 
-app.post('/api/persons/:id', (req, res) => {
+app.delete('/api/persons/:id', (req, res) => {
   const id = Number(req.params.id)
   const person = persons.find(p => p.id === id)
   if (person) {
@@ -57,7 +70,7 @@ app.post('/api/persons/:id', (req, res) => {
   }
 })
 
-app.post('/api/persons/', (req, res) => {
+app.post('/api/persons', (req, res) => {
   const person = req.body
   if (!utills.validAddInput(person)) {
     res.send({error: 'name or number is missing'})
@@ -66,11 +79,19 @@ app.post('/api/persons/', (req, res) => {
     res.send({error: 'name must be unique'})
   }
   else {
+    console.log(persons)
     person.id = maxId++
     persons = persons.concat(person)
-    res.json(persons)
+    console.log(persons)
+    res.json(person)
   }
 })
+
+const unknownEndpoint = (request, response) => {
+  response.status(404).send({ error: 'unknown endpoint' })
+}
+
+app.use(unknownEndpoint)
 
 const PORT = 3001
 app.listen(PORT, () => {
