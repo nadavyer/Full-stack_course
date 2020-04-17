@@ -1,16 +1,47 @@
 
 const getCurrentTime = () => {
     
+    let date = new Date()
+    const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+         'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+
     const getDay = () => {
-        var days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
-        var d = new Date()
-        var dayName = days[d.getDay()]
+        let dayName = days[date.getDay()]
         return dayName
     }
 
-    return getDay() //todo: stoped here
+    const getMonth = () => {
+        let monthName = months[date.getMonth()]
+        return monthName
+    }
+
+    const getYear = () => {
+        return date.getFullYear()
+    }
+
+    const getDayInMonth = () => {
+        return date.getDate()
+    }
+
+    const getTime = () => {
+        return `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`
+    }
+
+    return `${getDay()} ${getMonth()} ${getDayInMonth()} ${getYear()} ${getTime()}`
+}
+
+const validAddInput = (person) => {
+    return person.name && person.number
+}
+
+const nameInPhonebook = (name, persons) => {
+    const person = persons.filter(p => p.name.toLowerCase() === name.toLowerCase())
+    return person
 }
 
  module.exports = {
-     getCurrentTime: getCurrentTime
+    getCurrentTime: getCurrentTime,
+    validAddInput: validAddInput,
+    nameInPhonebook: nameInPhonebook
  }

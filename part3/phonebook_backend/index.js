@@ -4,8 +4,6 @@ const app = express()
 
 app.use(express.json())
 
-
-
 let persons = [
     { 
       name: "Arto Hellas", 
@@ -29,11 +27,12 @@ let persons = [
     }
   ]
 
+  let maxId = persons.length + 1
+
 
 app.get('/info', (req, res) => {
-  let numOfPeopleLine = `Phonebook has info for ${persons.length} people \n\n`
   console.log(utills.getCurrentTime())
-  res.end(utills.getCurrentTime())
+  res.end(`Phonebook has info for ${persons.length} people \n\n${utills.getCurrentTime()} (GMT+3 Middle East Time Zone)`)
 })
 
 app.get('/api/persons', (req, res) => {
@@ -43,10 +42,33 @@ app.get('/api/persons', (req, res) => {
 app.get('/api/persons/:id', (req, res) => {
   const id = Number(req.params.id)
   const person = persons.find(p => p.id === id)
-  if(person) {
-    res.json(person)
+  person ? res.json(person) : res.status(404).end()
+})
+
+app.post('/api/persons/:id', (req, res) => {
+  const id = Number(req.params.id)
+  const person = persons.find(p => p.id === id)
+  if (person) {
+    persons = persons.filter(p => p.id !== id)
+    res.json(persons)
   }
-  else{res.status(404).end()
+  else {
+    res.status(404).end()
+  }
+})
+
+app.post('/api/persons/', (req, res) => {
+  const person = req.body
+  if (!utills.validAddInput(person)) {
+    res.send({error: 'name or number is missing'})
+  }
+  else if (utills.nameInPhonebook(person.name, persons)) {
+    res.send({error: 'name must be unique'})
+  }
+  else {
+    person.id = maxId++
+    persons = persons.concat(person)
+    res.json(persons)
   }
 })
 
