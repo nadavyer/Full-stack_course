@@ -7,7 +7,8 @@
     "build:ui": "rm -rf build && cd ../../part2/phonebook && npm run build --prod && cp -r build /home/nadav/Full-stack_course/part3/phonebook_backend/",
     "start": "node index.js",
     "dev": "nodemon index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint ."
   },
   "author": "Nadav Yerushalmi",
   "license": "ISC",
@@ -21,6 +22,7 @@
     "morgan": "^1.10.0"
   },
   "devDependencies": {
+    "eslint": "^6.8.0",
     "nodemon": "^2.0.3"
   }
 }

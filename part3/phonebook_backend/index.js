@@ -12,22 +12,21 @@ app.use(cors())
 
 
 
-//clog all POST 
-logger.token('person', function (request, response) {
+//clog all POST
+logger.token('person', function (request) {
   return JSON.stringify(request.body)
 })
 app.use(logger(':method :url :status :res[content-length] - :response-time ms :person', {
-  skip: function (request, response) {return request.method === 'GET'}
+  skip: function (request) {return request.method === 'GET'}
 }))
 
 
 
-app.get('/info', (request, response) => {
+app.get('/info', (response, next) => {
   Person.collection.countDocuments()
-  .then(count => 
-    response.send(`Phonebook has info for ${count} people </br></br>${utills.getCurrentTime()} (GMT+3 Middle East Time Zone)`))
-  .catch(error => next(error))
-  
+    .then(count =>
+      response.send(`Phonebook has info for ${count} people </br></br>${utills.getCurrentTime()} (GMT+3 Middle East Time Zone)`))
+    .catch(error => next(error))
 })
 
 app.get('/api/persons', (request, response) => {
@@ -38,15 +37,15 @@ app.get('/api/persons', (request, response) => {
 
 app.get('/api/persons/:id', (request, response, next) => {
   Person.findById(request.params.id)
-  .then(person => {
-    if (person) {
-      response.json(person.toJSON())
-    }
-    else {
-      response.status(404).end()
-    }
-  })
-  .catch(error => next(error))
+    .then(person => {
+      if (person) {
+        response.json(person.toJSON())
+      }
+      else {
+        response.status(404).end()
+      }
+    })
+    .catch(error => next(error))
 })
 
 app.delete('/api/persons/:id', (request, response, next) => {
@@ -54,9 +53,8 @@ app.delete('/api/persons/:id', (request, response, next) => {
     .then(result => {
       if (result) response.status(204).end()
       else {
-        response.status(400).send({ error: 'was already deleted'})
+        response.status(400).send({ error: 'was already deleted' })
       }
-      
     })
     .catch(error => next(error))
 })
@@ -64,31 +62,32 @@ app.delete('/api/persons/:id', (request, response, next) => {
 app.post('/api/persons', (request, response, next) => {
   const body = request.body
   Person.find({ name: body.name })
-  .then(result => {
+    .then(() => {
       const person = new Person({
         name: body.name,
         number: body.number,
       })
       person.save()
-      .then(savedPerson => {
-        response.json(savedPerson.toJSON())
-      })
-      .catch(error => next(error))
-  })
-  .catch(error => next(error))
+        .then(savedPerson => savedPerson.toJSON())
+        .then(savedAndFormatedPerson => {
+          response.json(savedAndFormatedPerson)
+        })
+        .catch(error => next(error))
+    })
+    .catch(error => next(error))
 })
 
 app.put('/api/persons/:id', (request, response, next) => {
   const body = request.body
   const person = {
-      name: body.name,
-      number: body.number,
+    name: body.name,
+    number: body.number,
   }
   Person.findByIdAndUpdate(request.params.id, person, { new: true })
-  .then(updatedPerson => {
-    response.json(updatedPerson.toJSON())
-  })
-  .catch(error => next(error))
+    .then(updatedPerson => {
+      response.json(updatedPerson.toJSON())
+    })
+    .catch(error => next(error))
 })
 
 const unknownEndpoint = (request, response) => {
@@ -105,7 +104,7 @@ const errorHandler = (error, request, response, next) => {
   }
   else if (error.name === 'ValidationError') {
     return response.status(400).json({ error: error.message })
-  } 
+  }
 
   next(error)
 }
