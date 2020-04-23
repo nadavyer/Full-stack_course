@@ -11,43 +11,23 @@ app.use(express.json())
 app.use(cors())
 
 
+
 //clog all POST 
 logger.token('person', function (request, response) {
   return JSON.stringify(request.body)
 })
 app.use(logger(':method :url :status :res[content-length] - :response-time ms :person', {
-  skip: function (request, response) {return request.method !== 'POST'}
+  skip: function (request, response) {return request.method === 'GET'}
 }))
 
 
 
-let persons = [
-    { 
-      name: "Arto Hellas", 
-      number: "040-123456",
-      id: 1
-    },
-    { 
-      name: "Ada Lovelace", 
-      number: "39-44-5323523",
-      id: 2
-    },
-    { 
-      name: "Dan Abramov", 
-      number: "12-43-234345",
-      id: 3
-    },
-    { 
-      name: "Mary Poppendieck", 
-      number: "39-23-6423122",
-      id: 4
-    }
-  ]
-
-
 app.get('/info', (request, response) => {
-  console.log(utills.getCurrentTime())
-  response.end(`Phonebook has info for ${persons.length} people \n\n${utills.getCurrentTime()} (GMT+3 Middle East Time Zone)`)
+  Person.collection.countDocuments()
+  .then(count => 
+    response.send(`Phonebook has info for ${count} people </br></br>${utills.getCurrentTime()} (GMT+3 Middle East Time Zone)`))
+  .catch(error => next(error))
+  
 })
 
 app.get('/api/persons', (request, response) => {
@@ -70,31 +50,45 @@ app.get('/api/persons/:id', (request, response, next) => {
 })
 
 app.delete('/api/persons/:id', (request, response, next) => {
-  Person.findByIdAndDelete(request.params.id)
+  Person.findByIdAndRemove(request.params.id)
     .then(result => {
-      response.status(204).end()
+      if (result) response.status(204).end()
+      else {
+        response.status(400).send({ error: 'was already deleted'})
+      }
+      
     })
     .catch(error => next(error))
 })
 
 app.post('/api/persons', (request, response, next) => {
   const body = request.body
-  if (!utills.validAddInput(body)) {
-    response.status(400).json({ error: 'name or number is missing' })
-  }
-  else if (utills.nameInPhonebook(body.name, persons)) {
-    response.send({ error: 'name must be unique' })
-  }
-  else {
-    const person = new Person({
+  Person.find({ name: body.name })
+  .then(result => {
+      const person = new Person({
+        name: body.name,
+        number: body.number,
+      })
+      person.save()
+      .then(savedPerson => {
+        response.json(savedPerson.toJSON())
+      })
+      .catch(error => next(error))
+  })
+  .catch(error => next(error))
+})
+
+app.put('/api/persons/:id', (request, response, next) => {
+  const body = request.body
+  const person = {
       name: body.name,
       number: body.number,
-    })
-    person.save().then(savedPerson => {
-      response.json(savedPerson.toJSON())
-    })
-    .catch(error => next(error))
   }
+  Person.findByIdAndUpdate(request.params.id, person, { new: true })
+  .then(updatedPerson => {
+    response.json(updatedPerson.toJSON())
+  })
+  .catch(error => next(error))
 })
 
 const unknownEndpoint = (request, response) => {
@@ -108,6 +102,9 @@ const errorHandler = (error, request, response, next) => {
 
   if (error.name === 'CastError') {
     return response.status(400).send({ error: 'malformatted id' })
+  }
+  else if (error.name === 'ValidationError') {
+    return response.status(400).json({ error: error.message })
   } 
 
   next(error)
