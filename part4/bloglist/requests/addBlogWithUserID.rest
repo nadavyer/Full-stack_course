@@ -1,0 +1,10 @@
+POST http://localhost:3003/api/blogs/
+Content-Type: application/json
+
+{
+    "title": "gG",
+    "author":"fgss",
+    "url": "www.blah.com",
+    "likes": 55,
+    "userId": "5eaaf1daf20f6809c9d21324"
+ }

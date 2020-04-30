@@ -101,8 +101,9 @@ describe('delete a blog', () => {
 
   // test('delete non exists id', async () => {
   //   const validNonExistId = await helper.nonExistingId()
+  //   console.log(validNonExistId)
   //   await api
-  //     .delete(`api/blogs/${validNonExistId}`)
+  //     .delete(`api/blogs/5ea937455ae621032c258db8`)
   //     .expect(400)
 
   //     const blogs = await helper.blogsInDb()
@@ -114,16 +115,31 @@ describe('updating blog', () => {
   test('updating existing blog', async () => {
     const blogs = await helper.blogsInDb()
     const blogToUpdate = blogs[0]
-    const updatedBlog = {
-      title: blogToUpdate.title,
-      author: blogToUpdate.author,
-      url: blogToUpdate.url,
+    const updatedBlog = { ...blogToUpdate,
       likes: blogToUpdate.likes + 1
     }
-    const updatedBlog = await api
-                        .put(`/api/blogs/${blogToUpdate.id}`)
-                        .send(updatedBlog)
-                        .expect(updatedBlog).toHaveProperty('likes', blogToUpdate.likes + 1)      
+
+    const updatedBlogResponse = await api
+    .put(`/api/blogs/${blogToUpdate.id}`)
+    .send(updatedBlog)
+    .expect(200)
+    expect(updatedBlogResponse.body).toHaveProperty('likes', blogToUpdate.likes + 1)
+  })
+
+  test('updating non existing blog id', async () => {
+    let blogs = await helper.blogsInDb()
+    const blogToUpdate = blogs[0]
+    const updatedBlog = { ...blogToUpdate,
+      likes: blogToUpdate.likes + 1
+    }
+
+    await api
+    .put('/api/blogs/1')
+    .send(updatedBlog)
+    .expect(400)
+
+    blogs = await helper.blogsInDb()
+    expect(blogs).toContainEqual(blogToUpdate)
   })
 })
 
