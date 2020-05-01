@@ -1,0 +1,11 @@
+POST http://localhost:3003/api/blogs/
+Content-Type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im5hZCIsImlkIjoiNWVhYzI0ZmE5Y2RkMTEwNGQ5ZGIyYWNlIiwiaWF0IjoxNTg4MzM5OTgwfQ.Rg6FCxPf8kiXddPJ7Rw0ky4ykioacQnPwG5gcY2u3GY
+
+
+{
+    "title": "test",
+    "author":"fgss77",
+    "url": "www.blah.com",
+    "likes": 1
+ }

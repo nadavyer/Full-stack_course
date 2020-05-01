@@ -1,19 +1,46 @@
 const mongoose = require('mongoose')
 const supertest = require('supertest')
+const bcrypt = require('bcrypt')
 const app = require('../app')
 const Blog = require('../models/blog')
+const User = require('../models/user')
 const helper = require('./test_helper')
+
 
 const api = supertest(app)
 
 beforeEach(async () => {
     await Blog.deleteMany({})
+    await User.deleteMany({})
+
+    const saltRounds = 10
+  const passwordHash = await bcrypt.hash('555', saltRounds)
+
+  const user = new User({
+    username: "nadavyer",
+    name: "Nadav Yerushalmi",
+    passwordHash,
+  })
+
+  await user.save()
+
+
 
     for (let i = 0; i < helper.initialBlogs.length; i++) {
         let blogObj = new Blog(helper.initialBlogs[i])
     await blogObj.save()
     }
 })
+
+const loginUser = async () => {
+  const token = await api
+  .post('/api/login')
+  .send({
+    username: "nadavyer",
+    password: "555"
+  })
+  return token
+}
 
 
 describe('when there are elements in db', () => {
@@ -57,9 +84,17 @@ describe('adding a blog', () => {
   })
 
   test('title is missing - should send 400', async () => {
+    const token = await api
+    .post('/api/login')
+    .send({
+      username: "nadavyer",
+      password: "555"
+    })
+
     await api
       .post('/api/blogs')
       .send(helper.testerNoTitle)
+      .set({ Authorization: token})
       .expect(400)
 
     const blogs = await helper.blogsInDb()
@@ -67,9 +102,17 @@ describe('adding a blog', () => {
   })
 
   test('url is missing - should send 400', async () => {
+    const token = await api
+    .post('/api/login')
+    .send({
+      username: "nadavyer",
+      password: "555"
+  })
+
     await api
       .post('/api/blogs')
       .send(helper.testerNoUrl)
+      .set({ Authorization: token})
       .expect(400)
 
     const blogs = await helper.blogsInDb()
@@ -142,6 +185,29 @@ describe('updating blog', () => {
     expect(blogs).toContainEqual(blogToUpdate)
   })
 })
+
+describe('testing login', () => {
+  test('valid loging', async () => {
+    const token = await loginUser()
+    expect(token).toContain(200)
+  })
+
+  test('not valid username ', async () => {
+    await api
+    .post('/api/login')
+    .send({
+      username: "nada",
+      password: "555"
+    })
+    .expect(401)
+  })
+
+  test('not valid pawssword ', async () => {
+    await loginUser()
+    .expect(401)
+  })
+})
+
 
 
 afterAll(() => {

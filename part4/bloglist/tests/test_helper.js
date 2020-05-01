@@ -87,6 +87,8 @@ const usersInDb = async () => {
   return users.map(u => u.toJSON())
 }
 
+
+
 module.exports = {
     initialBlogs,testerValid, testerNoLikes, testerNoTitle, testerNoUrl,
     insertToDB, blogsInDb, nonExistingId, usersInDb
