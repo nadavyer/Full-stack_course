@@ -33,13 +33,13 @@ beforeEach(async () => {
 })
 
 const loginUser = async () => {
-  const token = await api
+  const response = await api
   .post('/api/login')
   .send({
     username: "nadavyer",
     password: "555"
   })
-  return token
+  return response
 }
 
 
@@ -70,67 +70,86 @@ describe('viewing specific blog', () => {
 })
 
 describe('adding a blog', () => {  
-  test('valid data', async () => {
-    await helper.insertToDB(helper.testerValid)
+  test('valid data add blog', async () => {
+    const response = await loginUser()
+    const token = 'Bearer '.concat(response.body.token)
+    await api
+    .post('/api/blogs')
+    .send(helper.testerValid)
+    .set({ Authorization: token })
+    .expect(200)
+
     const blogs = await helper.blogsInDb()
       expect(blogs).toHaveLength(helper.initialBlogs.length + 1)
       expect(blogs).toContainEqual(expect.objectContaining(helper.testerValid))
   })
 
   test('when given no "likes" should set to zero', async () =>{
-    await helper.insertToDB(helper.testerNoLikes)
+    const response = await loginUser()
+    const token = 'Bearer '.concat(response.body.token)
+    await api
+    .post('/api/blogs')
+    .send(helper.testerNoLikes)
+    .set({ Authorization: token })
+    .expect(200)
+
     const blogs = await helper.blogsInDb()
     blogs.map(b => expect(b.likes).toBeDefined())
   })
 
   test('title is missing - should send 400', async () => {
-    const token = await api
-    .post('/api/login')
-    .send({
-      username: "nadavyer",
-      password: "555"
-    })
-
+    const response = await loginUser()
+    const token = 'Bearer '.concat(response.body.token)
     await api
-      .post('/api/blogs')
-      .send(helper.testerNoTitle)
-      .set({ Authorization: token})
-      .expect(400)
+    .post('/api/blogs')
+    .send(helper.testerNoTitle)
+    .set({ Authorization: token })
+    .expect(400)
 
     const blogs = await helper.blogsInDb()
-    expect(blogs).toHaveLength(helper.initialBlogs.length)
+      expect(blogs).toHaveLength(helper.initialBlogs.length)
+      expect(blogs).not.toContainEqual(expect.objectContaining(helper.testerNoTitle))
   })
 
   test('url is missing - should send 400', async () => {
-    const token = await api
-    .post('/api/login')
-    .send({
-      username: "nadavyer",
-      password: "555"
-  })
-
+    const response = await loginUser()
+    const token = 'Bearer '.concat(response.body.token)
     await api
-      .post('/api/blogs')
-      .send(helper.testerNoUrl)
-      .set({ Authorization: token})
-      .expect(400)
+    .post('/api/blogs')
+    .send(helper.testerNoUrl)
+    .set({ Authorization: token })
+    .expect(400)
 
     const blogs = await helper.blogsInDb()
-    expect(blogs).toHaveLength(helper.initialBlogs.length)
+      expect(blogs).toHaveLength(helper.initialBlogs.length)
+      expect(blogs).not.toContainEqual(expect.objectContaining(helper.testerNoUrl))
   })
 })
 
 describe('delete a blog', () => {
   test('delete existing blog in db', async () => {
+    const response = await loginUser()
+    const token = 'Bearer '.concat(response.body.token)
+    const blogToDelete = await api
+    .post('/api/blogs')
+    .send(helper.testerValid)
+    .set({ Authorization: token })
+    .expect(200)
+
     let blogs = await helper.blogsInDb()
-    const blogToDelete = blogs[0]
+    expect(blogs).toHaveLength(helper.initialBlogs.length + 1)
+    blogsIds = blogs.map(blog => { blog.id })
+    expect(blogsIds).not.toContain(blogToDelete.body.id)
+
     await api
-      .delete(`/api/blogs/${blogToDelete.id}`)
+      .delete(`/api/blogs/${blogToDelete.body.id}`)
+      .set({ Authorization: token})
       .expect(204)
     
     blogs = await helper.blogsInDb()
-    expect(blogs).toHaveLength(helper.initialBlogs.length - 1)
-    expect(blogs).not.toContainEqual(blogToDelete)
+    expect(blogs).toHaveLength(helper.initialBlogs.length)
+    blogsIds = blogs.map(blog => { blog.id })
+    expect(blogsIds).not.toContain(blogToDelete.body.id)
   })
 
   test('delete not valid id', async () => {
@@ -188,8 +207,9 @@ describe('updating blog', () => {
 
 describe('testing login', () => {
   test('valid loging', async () => {
-    const token = await loginUser()
-    expect(token).toContain(200)
+    const response = await loginUser()
+    console.log(response)
+    expect(response).toHaveProperty('status', 200)
   })
 
   test('not valid username ', async () => {
@@ -203,7 +223,12 @@ describe('testing login', () => {
   })
 
   test('not valid pawssword ', async () => {
-    await loginUser()
+    await api
+    .post('/api/login')
+    .send({
+      username: "nadavyer",
+      password: "55"
+    })
     .expect(401)
   })
 })
