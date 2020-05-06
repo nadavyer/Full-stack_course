@@ -20,32 +20,43 @@ const App = () => {
 
 
   const getBlogs = () => {
-    blogService.getAll().then(blogs =>
-      setBlogs( blogs )
-    )
+    blogService.getAll().then(blogs => {
+      setBlogs( blogService.sortByLikes(blogs) )
+    })
   }
 
   const addBlog = async blogObject => {
     try {
-      console.log('in try ')
-      let addedBlog = await blogService.creat(blogObject)
+      const addedBlog = await blogService.createBlog(blogObject)
       if(addedBlog) {
-        showNotification(blogObject)
-        setBlogs(blogs.concat(addedBlog))
+        setBlogs(blogService.sortByLikes(blogs.concat(addedBlog)))
+        showNotification(`a new blog ${blogObject.title} by ${blogObject.author}`)
       }
     } catch(error) {
       console.log('cought error:', error)
-      showErrorMessage(`Blog Creation was not succussful`)
+      showErrorMessage(`Blog creation was not succussful`)
+    }
+  }
+
+  const deleteBlog = async id => {
+    try {
+      await blogService.deleteBlog(id)
+      setBlogs(blogService.sortByLikes(blogs.filter(blog => blog.id !== id)))
+      showNotification(`Blog deleted`)
+    }catch (error) {
+      console.log('cought error:', error)
+      showErrorMessage(`Blog deletion was not succussful`)
+
     }
   }
 
   const updateBlog = async (id, blogObject) => {
     try {
       const updatedBlog = await blogService.update(id, blogObject)
-        setBlogs(blogs.map(blog => 
+        setBlogs(blogService.sortByLikes(blogs.map(blog => 
           blog.id === id ?
           updatedBlog : blog
-        ))
+        )))
     }catch (error) {
       showErrorMessage(`update blog was not succussful`)
     }
@@ -63,9 +74,9 @@ const App = () => {
   useEffect(getBlogs, [])
   useEffect(loggedInUserToLocalStorage, [])
 
-  const showNotification = (blog) => {
+  const showNotification = (message) => {
     setNotification(
-      `a new blog ${blog.title} by ${blog.author}`
+      message
     )
     setTimeout(() => {
       setNotification(null)
@@ -87,7 +98,7 @@ const App = () => {
       const user = await loginService.login({
         username, password
       })
-
+      console.log(user)
       window.localStorage.setItem(
         'loggedBlogsAppUser', JSON.stringify(user)
       ) 
@@ -152,13 +163,14 @@ const App = () => {
          buttonHideLabel='cancel'
         >
           <BlogForm 
-            createBlog={addBlog} 
+            addBlog={addBlog} 
           />
         </Togglable>
         <BlogList 
           blogs={blogs} 
           user={user}
-          updateBlog={updateBlog} 
+          updateBlog={updateBlog}
+          deleteBlog={deleteBlog} 
         />
       </div>
     )

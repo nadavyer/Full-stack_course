@@ -8,13 +8,19 @@ const setToken = newToken => {
   token = `bearer ${newToken}`
 }
 
-const create = async newObject => {
+const getConfig = () => {
   const config = {
     headers: { Authorization: token },
   }
-  console.log('before call')
-  const response = await axios.post(baseUrl, newObject, config)
-  console.log('response in blogs: ', response)
+  return config
+}
+
+const sortByLikes = array => {
+  return array.sort((blog, blogToCompare) => blogToCompare.likes - blog.likes)
+}
+
+const createBlog = async newObject => {
+  const response = await axios.post(baseUrl, newObject, getConfig())
   return response.data
 }
 const getAll = () => {
@@ -23,12 +29,13 @@ const getAll = () => {
 }
 
 const update = (id, newObject) => {
-  const config = {
-    headers: { Authorization: token },
-  }
-
-  const request = axios.put(`${baseUrl}/${id}`, newObject, config)
+  const request = axios.put(`${baseUrl}/${id}`, newObject, getConfig())
   return request.then(response => response.data)
 }
 
-export default { getAll, setToken, create, update }
+const deleteBlog = async id => {
+  const request = await axios.delete(`${baseUrl}/${id}`, getConfig())
+  return request.data
+}
+
+export default { getAll, setToken, createBlog, update, deleteBlog, sortByLikes }
