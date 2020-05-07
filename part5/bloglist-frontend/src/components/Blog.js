@@ -33,7 +33,7 @@ const Blog = ({ blog, user, updateBlog, deleteBlog }) => {
   const showBlogContent = () =>{
 
     return (
-      <div>
+      <div className='moreInfo'>
           {blog.url} <br/>
           <div>
             Likes: {blog.likes}
@@ -49,8 +49,8 @@ const Blog = ({ blog, user, updateBlog, deleteBlog }) => {
   }
   
   return(
-    <div style={blogStyle}>
-      {blog.title} {blog.author}
+    <div style={blogStyle} className='blogDefaultContent'>
+      <strong>{blog.title} </strong> {blog.author}
       <button onClick={handleViewButton}> {buttonInfo} </button> 
       {showInfo ? 
       showBlogContent() : null}  
