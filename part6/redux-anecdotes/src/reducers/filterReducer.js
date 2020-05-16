@@ -11,10 +11,12 @@ const filterReducer = (state = '', action) => {
 
 //action creators
 export const setFilter = filter => {
-    return {
+    return async dispatch => {
+      dispatch({
         type: 'SET_FILTER',
         data: { filter }
-    }
+    })
+  }
 }
 
 export default filterReducer
