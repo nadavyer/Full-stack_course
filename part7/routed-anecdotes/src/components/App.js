@@ -1,12 +1,11 @@
 import React, { useState } from 'react'
-import { 
-  BrowserRouter as Router,
-  Switch, Route, Link } from 'react-router-dom'
+import { Switch, Route, Link, useRouteMatch } from 'react-router-dom'
 import Menu from './Menu'
 import AnecdoteList from './AnecdoteList'
 import About from './About'
 import CreateNew from './CreateNewForm'
 import Footer from './Footer'
+import Anecdote from './Anecdote'
 
 
 const App = () => {
@@ -26,7 +25,6 @@ const App = () => {
       id: '2'
     }
   ])
-
   const [notification, setNotification] = useState('')
   const padding = {
     paddingRight: 5
@@ -51,28 +49,35 @@ const App = () => {
     setAnecdotes(anecdotes.map(a => a.id === id ? voted : a))
   }
 
+  const match = useRouteMatch('/anecdotes/:id')
+  const anecdote = match 
+    ? anecdotes.find(anecdote => Number(anecdote.id) === Number(match.params.id))
+    : null
+
   return (
     <div>
       <h1>Software anecdotes</h1>
       {/* <Menu /> */}
-      <Router>
           <div>
-            <Link style={padding} to='/'> anecdotes </Link>
+            <Link style={padding} to='/'> home  </Link>
+            <Link style={padding} to='/anecdotes'> anecdotes </Link>
             <Link style={padding} to='/create'> create new </Link>
-            <Link style={padding} to='about'> about </Link>
+            <Link style={padding} to='/about'> about </Link>
           </div>
         <Switch>
+            <Route path='/anecdotes/:id'>
+              <Anecdote anecdote={anecdote} />
+            </Route>
+            <Route path="/anecdotes">
+              <AnecdoteList anecdotes={anecdotes} />
+            </Route>
             <Route path='/create'>
               <CreateNew addNew={addNew} />
             </Route>
             <Route path='/about'>
               <About />
             </Route>
-            <Route path="/">
-              <AnecdoteList anecdotes={anecdotes} />
-            </Route>
           </Switch>
-      </Router>
       {/* <AnecdoteList anecdotes={anecdotes} />
       <About />
       <CreateNew addNew={addNew} /> */}
