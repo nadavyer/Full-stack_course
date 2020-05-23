@@ -6,6 +6,7 @@ import About from './About'
 import CreateNew from './CreateNewForm'
 import Footer from './Footer'
 import Anecdote from './Anecdote'
+import Notification from './Notification'
 
 
 const App = () => {
@@ -29,10 +30,20 @@ const App = () => {
   const padding = {
     paddingRight: 5
   }
+
+  const showNotification = (message, timeOut) => {
+    setNotification(
+      message
+    )
+    setTimeout(() => {
+      setNotification(null)
+    }, timeOut * 1000)
+  }
   
   const addNew = (anecdote) => {
     anecdote.id = (Math.random() * 10000).toFixed(0)
     setAnecdotes(anecdotes.concat(anecdote))
+    showNotification(`a new anecdote "${anecdote.content}" created!`, 10)
   }
 
   const anecdoteById = (id) =>
@@ -57,13 +68,15 @@ const App = () => {
   return (
     <div>
       <h1>Software anecdotes</h1>
-      {/* <Menu /> */}
           <div>
             <Link style={padding} to='/'> home  </Link>
             <Link style={padding} to='/anecdotes'> anecdotes </Link>
             <Link style={padding} to='/create'> create new </Link>
             <Link style={padding} to='/about'> about </Link>
           </div>
+      <div>
+      <Notification notification={notification} />
+      </div>
         <Switch>
             <Route path='/anecdotes/:id'>
               <Anecdote anecdote={anecdote} />
@@ -78,9 +91,6 @@ const App = () => {
               <About />
             </Route>
           </Switch>
-      {/* <AnecdoteList anecdotes={anecdotes} />
-      <About />
-      <CreateNew addNew={addNew} /> */}
       <Footer />
     </div>
   )
