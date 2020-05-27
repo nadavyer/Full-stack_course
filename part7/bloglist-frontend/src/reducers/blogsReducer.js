@@ -1,31 +1,56 @@
 import blogService from '../services/blogs'
 
-const byLikes = (b1, b2) => b2.likes - b1.likes
+
 
 const blogsReducer = (state = [], action) => {
   switch(action.type) {
-  case 'NEW_BLOG':
-    return state.concat(action.data).sort(byLikes)
-
   case 'INIT':
-      console.log(action.data)
-    return action.data.sort(byLikes)
+    return action.data
 
-  default:
-    return state.sort(byLikes)
+  case 'NEW_BLOG':
+    return state.concat(action.data)
+
+  case 'REMOVE_BLOG': {
+    const blogId = action.data
+    return state.filter(blog => blog.id !== blogId)
   }
-
+  case 'ADD_LIKE': {
+    const updatedBlog = action.data
+    return state.map(blog => blog.id === updatedBlog.id ? updatedBlog : blog)
+  }
+  default:
+    return state
+  }
 }
 
 //action creators
-export const createBlog = content => {
+export const addBlog = blog => {
   return async dispatch => {
-    const newBlog = await blogService.newBlog(content)
+    const newBlog = await blogService.create(blog)
     dispatch({
       type: 'NEW_BLOG',
       data : newBlog
     })
+  }
+}
 
+export const removeBlog = blogId => {
+  return async dispatch => {
+    await blogService.remove(blogId)
+    dispatch({
+      type: 'REMOVE_BLOG',
+      data: blogId
+    })
+  }
+}
+
+export const likeBlog = likedBlog => {
+  return async dispatch => {
+    const updatedBlog = await blogService.update(likedBlog)
+    dispatch({
+      type: 'ADD_LIKE',
+      data:  updatedBlog
+    })
   }
 }
 
