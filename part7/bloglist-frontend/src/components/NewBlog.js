@@ -11,7 +11,6 @@ const NewBlog = (props) => {
   const createBlog = blog => {
     dispatch(addBlog(blog))
     props.blogFormRef.current.toggleVisibility()
-    dispatch(notifyWith(`a new blog '${blog.title}' by ${blog.author} added!`))
   }
 
   const handleNewBlog = (event) => {

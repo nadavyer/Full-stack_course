@@ -16,13 +16,9 @@ const App = () => {
   const [user, setUser] = useState(null)
 
   const dispatch = useDispatch()
-  const blogs = useSelector(state => state.blogsReducer)
   const blogFormRef = React.createRef()
 
 
-  useEffect(() => {
-    dispatch(initializeBlogs())
-  }, [dispatch])
 
   useEffect(() => {
     const user = storage.loadUser()
@@ -50,21 +46,6 @@ const App = () => {
   }
 
 
-  const handleRemove = async (id) => {
-    const blogToRemove = blogs.find(b => b.id === id)
-    const ok = window.confirm(`Remove blog ${blogToRemove.title} by ${blogToRemove.author}`)
-    if (ok) {
-      dispatch(removeBlog(id))
-    }
-  }
-
-  const handleLike = async (id) => {
-    const blogToLike = blogs.find(b => b.id === id)
-    const likedBlog = { ...blogToLike, likes: blogToLike.likes + 1, user: blogToLike.user.id }
-    dispatch(likeBlog(likedBlog))
-  }
-
-
   if ( !user ) {
     return (
       <div>
@@ -89,7 +70,7 @@ const App = () => {
       <Togglable buttonLabel='create new blog'  ref={blogFormRef}>
         <NewBlog blogFormRef={blogFormRef}/>
       </Togglable>
-      <BlogList blogs={blogs} handleLike={handleLike} handleRemove={handleRemove} user={user} />
+      <BlogList user={user} />
     </div>
   )
 }

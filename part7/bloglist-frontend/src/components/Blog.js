@@ -14,6 +14,7 @@ const Blog = ({ blog, handleLike, handleRemove, own }) => {
 
   const label = visible ? 'hide' : 'view'
 
+
   return (
     <div style={blogStyle} className='blog'>
       <div>

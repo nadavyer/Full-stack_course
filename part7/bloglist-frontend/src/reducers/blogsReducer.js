@@ -1,4 +1,5 @@
 import blogService from '../services/blogs'
+import notifyWith from './notificationReducer'
 
 
 
@@ -27,6 +28,8 @@ const blogsReducer = (state = [], action) => {
 export const addBlog = blog => {
   return async dispatch => {
     const newBlog = await blogService.create(blog)
+    console.log(newBlog)
+    console.log('newBlog')
     dispatch({
       type: 'NEW_BLOG',
       data : newBlog
@@ -41,6 +44,7 @@ export const removeBlog = blogId => {
       type: 'REMOVE_BLOG',
       data: blogId
     })
+    
   }
 }
 
