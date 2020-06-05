@@ -1,30 +1,29 @@
 import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { addBlog } from '../reducers/blogsReducer'
-import { notifyWith } from '../reducers/notificationReducer'
 const NewBlog = (props) => {
-  const [title, setTitle] = useState('')
-  const [author, setAuthor] = useState('')
-  const [url, setUrl] = useState('')
-  const dispatch = useDispatch()
+  const [title, setTitle] = useState('');
+  const [author, setAuthor] = useState('');
+  const [url, setUrl] = useState('');
+  const dispatch = useDispatch();
 
   const createBlog = blog => {
-    dispatch(addBlog(blog))
+    dispatch(addBlog(blog));
     props.blogFormRef.current.toggleVisibility()
-  }
+  };
 
   const handleNewBlog = (event) => {
-    event.preventDefault()
+    event.preventDefault();
 
     createBlog({
       title, author, url
-    })
+    });
 
 
-    setTitle('')
-    setAuthor('')
+    setTitle('');
+    setAuthor('');
     setUrl('')
-  }
+  };
 
   return (
     <div>
@@ -58,6 +57,6 @@ const NewBlog = (props) => {
       </form>
     </div>
   )
-}
+};
 
 export default NewBlog

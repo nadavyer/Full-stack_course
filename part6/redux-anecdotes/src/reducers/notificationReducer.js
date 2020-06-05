@@ -1,4 +1,4 @@
-let timeoutId = 0 
+let timeoutId = 0
 
 
 const notificationReducer = (state = null, action) => {

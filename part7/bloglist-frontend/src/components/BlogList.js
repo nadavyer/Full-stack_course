@@ -5,27 +5,27 @@ import { likeBlog, removeBlog, initializeBlogs } from '../reducers/blogsReducer'
 
 const BlogList = (props) => {
 
-  const dispatch = useDispatch()
-  const blogs = useSelector(state => state.blogsReducer)
-  const byLikes = (b1, b2) => b2.likes - b1.likes
+  const dispatch = useDispatch();
+  const blogs = useSelector(state => state.blogsReducer);
+  const byLikes = (b1, b2) => b2.likes - b1.likes;
 
   const handleRemove = async (id) => {
-    const blogToRemove = blogs.find(b => b.id === id)
-    const ok = window.confirm(`Remove blog ${blogToRemove.title} by ${blogToRemove.author}`)
+    const blogToRemove = blogs.find(b => b.id === id);
+    const ok = window.confirm(`Remove blog ${blogToRemove.title} by ${blogToRemove.author}`);
     if (ok) {
       dispatch(removeBlog(id))
     }
-  }
+  };
 
   const handleLike = async (id) => {
-    const blogToLike = blogs.find(b => b.id === id)
-    const likedBlog = { ...blogToLike, likes: blogToLike.likes + 1, user: blogToLike.user.id }
+    const blogToLike = blogs.find(b => b.id === id);
+    const likedBlog = { ...blogToLike, likes: blogToLike.likes + 1, user: blogToLike.user.id };
     dispatch(likeBlog(likedBlog))
-  }
+  };
 
   useEffect(() => {
     dispatch(initializeBlogs())
-  }, [dispatch])
+  }, [dispatch]);
 
 
   return (
@@ -39,6 +39,6 @@ const BlogList = (props) => {
       />
     )}</div>
   )
-}
+};
 
 export default BlogList
