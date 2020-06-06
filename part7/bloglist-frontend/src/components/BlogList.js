@@ -35,7 +35,7 @@ const BlogList = (props) => {
         blog={blog}
         handleLike={handleLike}
         handleRemove={handleRemove}
-        own={props.user.username===blog.user.username}
+        own={props.user.username === blog.user.username}
       />
     )}</div>
   )

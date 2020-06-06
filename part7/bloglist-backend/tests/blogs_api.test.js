@@ -238,4 +238,5 @@ describe('creation of a user', () => {
 })
 
 afterAll(() => {
-  mongoose.conne
+  mongoose.connect
+})
