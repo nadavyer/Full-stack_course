@@ -2,7 +2,8 @@ import React from 'react'
 import Notification from '../components/Notification'
 import UserTable from '../components/UserTable'
 
-const UsersPage = ({ user, handleLogout, usersBlogsCount}) => {
+
+const UsersPage = ({ user, users, handleLogout }) => {
 
   return (
     <div>
@@ -16,7 +17,7 @@ const UsersPage = ({ user, handleLogout, usersBlogsCount}) => {
         <button onClick={handleLogout}>logout</button>
       </p>
 
-      <UserTable usersBlogsCount={usersBlogsCount}/>
+      <UserTable usersBlogsCount={users}/>
     </div>
   )
 }

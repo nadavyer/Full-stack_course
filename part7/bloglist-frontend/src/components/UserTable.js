@@ -2,9 +2,9 @@ import React from 'react'
 import User from './User'
 
 
-const UserTable = ({ usersBlogsCount }) => {
-  const byBlogsCount = (u1, u2) => u2.userBlogCount - u1.userBlogCount
 
+const UserTable = ({ usersBlogsCount }) => {
+  const byBlogsCount = (u1, u2) => u2.blogs.length - u1.blogs.length
 
   return (
     <table>
@@ -18,8 +18,7 @@ const UserTable = ({ usersBlogsCount }) => {
         <tbody
           key={user.username}>
           <User
-            name={user.name}
-            blogsCount={user.userBlogCount}
+            user={user}
           />
         </tbody>
       )}

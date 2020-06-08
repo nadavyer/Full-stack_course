@@ -1,15 +1,19 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 
-const User = ({ name, blogsCount }) => {
+const User = ({ user }) => {
 
   return (
     <tr>
-      <td>{name}</td>
-      <td> {blogsCount} </td>
+      <td>
+        <Link to={`/users/${user.id}`}> {user.name}  </Link>
+      </td>
+      <td>
+        {user.blogs.length}
+      </td>
     </tr>
   )
 }
-
 
 
 export default User

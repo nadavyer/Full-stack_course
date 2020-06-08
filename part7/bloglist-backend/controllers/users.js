@@ -5,10 +5,21 @@ const User = require('../models/user')
 
 router.get('/', async (request, response) => {
   const users = await User
-    .find({}).populate('user', { username: 1, name: 1 , blogs: 1})
+    .find({})
+    .find({}).populate('user')
+    .find({}).populate({
+      path: "blogs",
+      model: "Blog"
+    })
 
-  const usersBlogsCount = users.map(({ name, username, blogs}) => ({ name, username, userBlogCount: blogs.length }))
-  response.json(usersBlogsCount)
+  const userJson = users.map(user => user.toJSON())
+  response.json(userJson)
+})
+
+router.get('/:id', async (request, response) => {
+  const user = await User
+    .findById(request.params.id).populate('user')
+  response.json(user)
 })
 
 
