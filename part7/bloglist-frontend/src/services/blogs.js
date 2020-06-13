@@ -14,8 +14,18 @@ const getAll = () => {
   return request.then(response => response.data)
 }
 
+const getById = id => {
+  const request = axios.get(`${baseUrl}/${id}`)
+  return request.then(response => response.data)
+}
+
 const create = (blog) => {
   const request = axios.post(baseUrl, blog, getConfig())
+  return request.then(response => response.data)
+}
+
+const addComment = (id, comment) => {
+  const request = axios.post(`${baseUrl}/${id}/comment`, { body: comment })
   return request.then(response => response.data)
 }
 
@@ -29,4 +39,4 @@ const remove = (id) => {
   return request.then(response => response.data)
 }
 
-export default { getAll, create, update, remove }
+export default { getAll, getById, addComment, create, update, remove }

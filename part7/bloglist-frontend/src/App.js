@@ -3,6 +3,7 @@ import LoginPage from './Pages/LoginPage'
 import UsersPage from './Pages/UsersPage'
 import BlogsPage from './Pages/BlogsPage'
 import UsersBlogsPage from './Pages/UserBlogsPage'
+import SingleBlog from './Pages/SingleBlog'
 import storage from './utils/storage'
 import { useDispatch, useSelector } from 'react-redux'
 import { loginUser, logoutUser, setUser } from './reducers/userReducer'
@@ -26,7 +27,7 @@ const App = () => {
     usersService.getAll()
       .then(users => SetUsers(users))
   }, [])
-  
+
 
 
   const handleLogin = async (username, password) => {
@@ -51,6 +52,9 @@ const App = () => {
       </Route>
       <Route path='/users'>
         <UsersPage user={user} users={users} handleLogout={handleLogout} />
+      </Route>
+      <Route path='/blogs/:id'>
+        <SingleBlog user={user} handleLogout={handleLogout}/>
       </Route>
       <Route path='/'>
         <BlogsPage user={user} handleLogout={handleLogout} blogFormRef={blogFormRef}/>

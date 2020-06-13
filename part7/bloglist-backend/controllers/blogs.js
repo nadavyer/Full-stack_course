@@ -5,22 +5,29 @@ const User = require('../models/user')
 
 router.get('/', async (request, response) => {
   const blogs = await Blog
-    .find({}).populate('user', { username: 1, name: 1 })
+    .find({}).populate('user')
 
   response.json(blogs)
+})
+
+router.get('/:id', async (request, response) => {
+  const blog = await Blog
+    .findById(request.params.id).populate('user')
+
+  response.json(blog)
 })
 
 router.delete('/:id', async (request, response) => {
   const decodedToken = jwt.verify(request.token, process.env.SECRET)
 
   if (!request.token || !decodedToken.id) {
-    return response.status(401).json({ error: 'token missing or invalid' })
+    return response.status(401).json({error: 'token missing or invalid'})
   }
 
   const user = await User.findById(decodedToken.id)
   const blog = await Blog.findById(request.params.id)
   if (blog.user.toString() !== user.id.toString()) {
-    return response.status(401).json({ error: 'only the creator can delete blogs' })
+    return response.status(401).json({error: 'only the creator can delete blogs'})
   }
 
   await blog.remove()
@@ -32,7 +39,7 @@ router.delete('/:id', async (request, response) => {
 router.put('/:id', async (request, response) => {
   const blog = request.body
 
-  const updatedBlog = await Blog.findByIdAndUpdate(request.params.id, blog, { new: true }).populate('user', { username: 1, name: 1 });
+  const updatedBlog = await Blog.findByIdAndUpdate(request.params.id, blog, {new: true}).populate('user');
   response.json(updatedBlog.toJSON())
 })
 
@@ -42,13 +49,13 @@ router.post('/', async (request, response) => {
   const decodedToken = jwt.verify(request.token, process.env.SECRET)
 
   if (!request.token || !decodedToken.id) {
-    return response.status(401).json({ error: 'token missing or invalid' })
+    return response.status(401).json({error: 'token missing or invalid'})
   }
 
   const user = await User.findById(decodedToken.id)
 
   if (!blog.url || !blog.title) {
-    return response.status(400).send({ error: 'title or url missing ' })
+    return response.status(400).send({error: 'title or url missing '})
   }
 
   if (!blog.likes) {
@@ -62,6 +69,27 @@ router.post('/', async (request, response) => {
   await user.save()
 
   response.status(201).json(savedBlog)
+})
+
+router.post("/:id/comment", async (request, response) => {
+  const id = request.params.id
+  const comment = request.body.body
+  const blog = await Blog.findById(id);
+  if (blog) {
+    blog.comments = blog.comments.concat(comment)
+    const newBlog = await blog.save();
+    const fullBlog = await Blog.populate(newBlog, {
+      path: 'user'
+    });
+
+    response.status(200).json(
+      fullBlog
+    )
+  } else {
+    response.status(400).json({
+      error: `No blog with the following id: ${id}`
+    })
+  }
 })
 
 module.exports = router

@@ -1,6 +1,7 @@
 import React from 'react'
 import Notification from '../components/Notification'
 import { useParams } from 'react-router-dom'
+import Navigator from '../components/Navigator'
 
 
 const UsersBlogsPage = ({ user, users, handleLogout }) => {
@@ -8,15 +9,10 @@ const UsersBlogsPage = ({ user, users, handleLogout }) => {
   const userToShow = users.find(user => String(user.id) === String(id))
   return (
     <div>
+      <Navigator user={user} handleLogout={handleLogout}/>
       <h2>Blogs</h2>
 
       <Notification/>
-
-      <p>
-        {user.name} logged in
-        <br/>
-        <button onClick={handleLogout}>logout</button>
-      </p>
 
       <h4> Added blogs </h4>
       <ul>

@@ -5,8 +5,6 @@ const User = require('../models/user')
 
 router.get('/', async (request, response) => {
   const users = await User
-    .find({})
-    .find({}).populate('user')
     .find({}).populate({
       path: "blogs",
       model: "Blog"

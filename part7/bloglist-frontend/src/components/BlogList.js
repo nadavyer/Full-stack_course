@@ -1,44 +1,37 @@
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import Blog from './Blog'
-import { likeBlog, removeBlog, initializeBlogs } from '../reducers/blogsReducer'
+import { initializeBlogs } from '../reducers/blogsReducer'
+import { Link } from 'react-router-dom'
 
-const BlogList = (props) => {
+const BlogList = () => {
 
   const dispatch = useDispatch();
   const blogs = useSelector(state => state.blogsReducer);
   const byLikes = (b1, b2) => b2.likes - b1.likes;
 
-  const handleRemove = async (id) => {
-    const blogToRemove = blogs.find(b => b.id === id);
-    const ok = window.confirm(`Remove blog ${blogToRemove.title} by ${blogToRemove.author}`);
-    if (ok) {
-      dispatch(removeBlog(id))
-    }
-  };
 
-  const handleLike = async (id) => {
-    const blogToLike = blogs.find(b => b.id === id);
-    const likedBlog = { ...blogToLike, likes: blogToLike.likes + 1, user: blogToLike.user.id };
-    dispatch(likeBlog(likedBlog))
-  };
 
   useEffect(() => {
     dispatch(initializeBlogs())
-  }, [dispatch]);
+  }, [dispatch])
 
+  const blogStyle = {
+    paddingTop: 10,
+    paddingLeft: 2,
+    border: 'solid',
+    borderWidth: 1,
+    marginBottom: 5
+  }
 
   return (
-    <div>{blogs.sort(byLikes).map(blog =>
-      <Blog
-        key={blog.id}
-        blog={blog}
-        handleLike={handleLike}
-        handleRemove={handleRemove}
-        own={props.user.username === blog.user.username}
-      />
-    )}</div>
+    <div>
+      {blogs.sort(byLikes).map(blog =>
+        <div key={blog.id} style={blogStyle}>
+          <Link to={`/blogs/${blog.id}`}> {blog.title} - {blog.author} </Link>
+        </div>
+      )}
+    </div>
   )
-};
+}
 
 export default BlogList

@@ -3,19 +3,17 @@ import Notification from '../components/Notification'
 import Togglable from '../components/Togglable'
 import NewBlog from '../components/NewBlog'
 import BlogList from '../components/BlogList'
+import Navigator from '../components/Navigator'
 
 const BlogsPage = ({ user, handleLogout, blogFormRef }) => {
   return (
     <div>
+      <div>
+        <Navigator user={user} handleLogout={handleLogout}/>
+      </div>
       <h2>Blogs</h2>
 
       <Notification/>
-
-      <p>
-        {user.name} logged in
-        <br/>
-        <button onClick={handleLogout}>logout</button>
-      </p>
 
       <Togglable buttonLabel='create new blog' ref={blogFormRef}>
         <NewBlog blogFormRef={blogFormRef}/>
