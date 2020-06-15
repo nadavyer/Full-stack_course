@@ -1,5 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import {Button} from 'react-bootstrap'
 
 const Blog = ({ blog, handleLike, handleRemove, own }) => {
 
@@ -12,10 +13,11 @@ const Blog = ({ blog, handleLike, handleRemove, own }) => {
         <a href={`https://${blog.url}`}> {blog.url} </a>
       </div>
       <div>likes {blog.likes}
-        <button onClick={() => handleLike(blog.id)}>like</button>
+        {/*<button onClick={() => handleLike(blog.id)}>like</button>*/}
+        <Button variant='secondary' size='sm' onClick={() => handleLike(blog.id)}>like</Button>
       </div>
       <div>added by {blog.user.name}</div>
-      {own && <button onClick={() => handleRemove(blog.id)}>remove</button>}
+      {own && <Button variant='secondary' size='sm' onClick={() => handleRemove(blog.id)}>remove blog</Button>}
     </div>
   )
 }

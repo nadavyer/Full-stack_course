@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { Form, Button } from 'react-bootstrap'
 
 const LoginForm = (props) => {
 
@@ -12,27 +13,32 @@ const LoginForm = (props) => {
     setPassword('')
   }
 
+
   return (
     <div>
-      <form onSubmit={handleLogin}>
-        <div>
-          username
-          <input
-            id='username'
+      <Form onSubmit={handleLogin}>
+        <Form.Group>
+          <Form.Label>username</Form.Label>
+          <Form.Control
+            type="text"
+            name="username"
             value={username}
             onChange={({ target }) => setUsername(target.value)}
           />
-        </div>
-        <div>
-          password
-          <input
-            id='password'
+          <Form.Label>password</Form.Label>
+          <Form.Control
+            type="password"
             value={password}
             onChange={({ target }) => setPassword(target.value)}
           />
-        </div>
-        <button id='login'>login</button>
-      </form>
+          <div >
+            <br/>
+            <Button variant="secondary" type="submit">
+              login
+            </Button>
+          </div>
+        </Form.Group>
+      </Form>
     </div>
   )
 }

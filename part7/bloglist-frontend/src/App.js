@@ -41,25 +41,29 @@ const App = () => {
 
   if (!user) {
     return (
-      <LoginPage handleLogin={handleLogin}/>
+      <div className="container">
+        <LoginPage handleLogin={handleLogin}/>
+      </div>
     )
   }
 
   return (
-    <Switch>
-      <Route path='/users/:id'>
-        <UsersBlogsPage user={user} users={users} handleLogout={handleLogout} />
-      </Route>
-      <Route path='/users'>
-        <UsersPage user={user} users={users} handleLogout={handleLogout} />
-      </Route>
-      <Route path='/blogs/:id'>
-        <SingleBlog user={user} handleLogout={handleLogout}/>
-      </Route>
-      <Route path='/'>
-        <BlogsPage user={user} handleLogout={handleLogout} blogFormRef={blogFormRef}/>
-      </Route>
-    </Switch>
+    <div className="container">
+      <Switch>
+        <Route path='/users/:id'>
+          <UsersBlogsPage user={user} users={users} handleLogout={handleLogout} />
+        </Route>
+        <Route path='/users'>
+          <UsersPage user={user} users={users} handleLogout={handleLogout} />
+        </Route>
+        <Route path='/blogs/:id'>
+          <SingleBlog user={user} handleLogout={handleLogout}/>
+        </Route>
+        <Route path='/'>
+          <BlogsPage user={user} handleLogout={handleLogout} blogFormRef={blogFormRef}/>
+        </Route>
+      </Switch>
+    </div>
   )
 }
 

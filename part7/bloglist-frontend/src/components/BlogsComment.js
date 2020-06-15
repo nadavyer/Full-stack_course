@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import blogServices from '../services/blogs'
 import { notifyWith } from '../reducers/notificationReducer'
 import { useDispatch } from 'react-redux'
+import { Button, Form } from 'react-bootstrap'
 
 
 const BlogsComment = ({ blog }) => {
@@ -23,27 +24,34 @@ const BlogsComment = ({ blog }) => {
 
   return (
     <div>
-      <h4> Comments </h4>
-      <form onSubmit={handleNewComment}>
-        <div>
-          <input
-            id='comment'
+      <Form onSubmit={handleNewComment}>
+        <Form.Group>
+          <Form.Control
+            type="text"
+            name="comment"
             value={comment}
             onChange={({ target }) => setComment(target.value)}
           />
-          <button id="submit"> add comment</button>
-        </div>
-      </form>
-      <div>
-        <ul>
+          <Button variant="secondary" size='sm' type="submit">
+            add comment
+          </Button>
+        </Form.Group>
+      </Form>
+      <h4> Comments </h4>
+      {comments.length !== 0
+        ? (<ul>
           {comments.map((comment, i) =>
             <li key={`${comment}_${i}`}>
               {comment}
             </li>
           )}
-        </ul>
-      </div>
+        </ul>)
+        : <p>
+            No comments yet.
+        </p>}
+
     </div>
+    // </div>
   )
 }
 

@@ -6,7 +6,7 @@ const LoginPage = ({ handleLogin }) => {
 
   return (
     <div>
-      <h2>login to application</h2>
+      <h2>Login to application</h2>
       <Notification/>
       <LoginForm handleLogin={handleLogin}/>
     </div>
