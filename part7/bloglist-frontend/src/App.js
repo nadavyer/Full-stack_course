@@ -4,6 +4,7 @@ import UsersPage from './Pages/UsersPage'
 import BlogsPage from './Pages/BlogsPage'
 import UsersBlogsPage from './Pages/UserBlogsPage'
 import SingleBlog from './Pages/SingleBlog'
+import Register from './Pages/Register'
 import storage from './utils/storage'
 import { useDispatch, useSelector } from 'react-redux'
 import { loginUser, logoutUser, setUser } from './reducers/userReducer'
@@ -29,20 +30,27 @@ const App = () => {
   }, [])
 
 
-
   const handleLogin = async (username, password) => {
     dispatch(loginUser(username, password))
   }
   const handleLogout = () => {
     dispatch(logoutUser())
     storage.logoutUser()
-  };
+  }
+
 
 
   if (!user) {
     return (
       <div className="container">
-        <LoginPage handleLogin={handleLogin}/>
+        <Switch>
+          <Route path='/register'>
+            <Register/>
+          </Route>
+          <Route path='/'>
+            <LoginPage handleLogin={handleLogin}/>
+          </Route>
+        </Switch>
       </div>
     )
   }
@@ -51,10 +59,10 @@ const App = () => {
     <div className="container">
       <Switch>
         <Route path='/users/:id'>
-          <UsersBlogsPage user={user} users={users} handleLogout={handleLogout} />
+          <UsersBlogsPage user={user} users={users} handleLogout={handleLogout}/>
         </Route>
         <Route path='/users'>
-          <UsersPage user={user} users={users} handleLogout={handleLogout} />
+          <UsersPage user={user} users={users} handleLogout={handleLogout}/>
         </Route>
         <Route path='/blogs/:id'>
           <SingleBlog user={user} handleLogout={handleLogout}/>

@@ -52,6 +52,10 @@ const mostLikes = (blogs) => {
   return likeCountByAuthor[0]
 }
 
+const validPassword = (password) => {
+  return !(password === undefined || password.length < 3)
+}
+
 module.exports = {
-  totalLikes, favoriteBlog, mostBlogs, mostLikes
+  totalLikes, favoriteBlog, mostBlogs, mostLikes, validPassword
 }

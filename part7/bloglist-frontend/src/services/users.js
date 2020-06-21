@@ -19,8 +19,8 @@ const getById = id => {
   return request.then(response => response.data)
 }
 
-const create = (user) => {
-  const request = axios.post(baseUrl, user, getConfig())
+export const create = (user) => {
+  const request = axios.post(baseUrl, user)
   return request.then(response => response.data)
 }
 
